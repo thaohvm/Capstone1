@@ -1,0 +1,23 @@
+.domain-form {
+    margin-top: 50px
+}
+
+a {
+    color: white
+}
+
+.wrap {
+    overflow: hidden;
+    position: relative;
+}
+
+.img-bg {
+    opacity: 0.3;
+    position: absolute;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-color: #000;
+}
+nav {
+    overflow: auto;
+}

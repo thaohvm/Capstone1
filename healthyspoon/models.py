@@ -25,7 +25,7 @@ class User(db.Model):
     recipes = db.relationship('Recipes', secondary='recipes_users', backref='users')
 
     @classmethod
-    def register(cls, username, password, email, first_name, last_name):
+    def register(cls, username, password, email, location):
         """Register user w/hashed password and return user"""
 
         hashed = bcrypt.generate_password_hash(password)
@@ -34,8 +34,7 @@ class User(db.Model):
             username=username,
             password=hashed_utf8,
             email=email,
-            first_name=first_name,
-            last_name=last_name,
+            location=location
         )
 
         db.session.add(user)
