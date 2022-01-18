@@ -24,7 +24,6 @@
 
                         <input name="query" type="text" class="form-control px-4"
                             placeholder="Search by recipes, ingredient...">
-
                         <button type="submit" class="search-domain btn btn-primary px-5">Search</button>
 
                     </div>
@@ -34,7 +33,12 @@
     </div>
 
     <div>
-        <h3>Recent recipes</h3>
+        <h3>Random recipes</h3>
+        {% for recipe in recipes %}
+        <ul>
+            <li>{{ recipe.title }}</li>
+        </ul>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

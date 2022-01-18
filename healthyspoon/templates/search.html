@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Recipes which contains ingredient {{ query }}</h2>
+    {% for recipe in search_results %}
+    <li>Recipe name: <a href="/recipe/ {{ recipe['id'] }} ">{{ recipe['title'] }}</a></li>
+    <li>Summary: {{ recipe["summary"] | safe }}</li>
+    <img src="{{ recipe['image'] }}">
+    {% endfor %}
+</div>
+
+{% endblock %}

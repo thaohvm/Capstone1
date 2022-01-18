@@ -1,7 +1,13 @@
-from flask import Flask, request, redirect, render_template, session, g, flash
+from email.mime import image
+from flask import Flask, request, redirect, render_template, session, g, flash, jsonify
 from forms import RegisterForm, LoginForm
 from models import db, connect_db, User, RecipesUsers, Recipes, Ingredients, RecipesIngredients
 from sqlalchemy.exc import IntegrityError
+from bs4 import BeautifulSoup
+import requests
+
+API_BASE_URL = "https://api.spoonacular.com/recipes/"
+key = "e04fa2cf19db48a2a68c53f3f6d8d84c"
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///healthy_spoon'
@@ -12,10 +18,12 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 CURR_USER_KEY = "curr_user"
 
+
 connect_db(app)
 
 ##############################################################################
 # User signup/login/logout
+
 
 @app.before_request
 def add_user_to_g():
@@ -62,7 +70,7 @@ def signup():
                 password=form.password.data,
                 email=form.email.data,
                 location=form.location.data
-               )
+            )
             db.session.commit()
 
         except IntegrityError:
@@ -75,6 +83,7 @@ def signup():
 
     else:
         return render_template('signup.html', form=form)
+
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
@@ -107,6 +116,25 @@ def logout():
 ##############################################################################
 # Homepage and error pages
 
+
 @app.route("/")
 def homepage():
     return render_template("index.html")
+
+
+@app.route("/search")
+def handle_search():
+    query = request.args["query"]
+    res = requests.get(f"{API_BASE_URL}/complexSearch", params={"apiKey": key,
+                       "query": {query}, "addRecipeInformation": "true"})
+    results = res.json()["results"]
+    for r in results:
+        soup = BeautifulSoup(r["summary"])
+        for a in soup.findAll('a'):
+            a.replaceWithChildren()
+        r["summary"] = str(soup)
+    return render_template("search.html", query=query, search_results=results)
+
+@app.route("/recipe/<int:id>")
+def get_recipe_detail(id):
+    return render_template("recipe.html")
