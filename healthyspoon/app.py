@@ -135,6 +135,8 @@ def handle_search():
         r["summary"] = str(soup)
     return render_template("search.html", query=query, search_results=results)
 
-@app.route("/recipe/<int:id>")
-def get_recipe_detail(id):
-    return render_template("recipe.html")
+@app.route("/recipe/<int:recipe_id>")
+def get_recipe_detail(recipe_id):
+    res = requests.get(f"{API_BASE_URL}/{recipe_id}/information", params={"apiKey": key})
+    results = res.json()
+    return render_template("recipe.html", info_recipe=results)
