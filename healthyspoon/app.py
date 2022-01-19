@@ -1,10 +1,13 @@
 from email.mime import image
-from flask import Flask, request, redirect, render_template, session, g, flash, jsonify
+from traceback import StackSummary
+from turtle import title
+from flask import Flask, request, redirect, render_template, session, g, flash, jsonify, abort
 from forms import RegisterForm, LoginForm
 from models import db, connect_db, User, RecipesUsers, Recipes, Ingredients, RecipesIngredients
 from sqlalchemy.exc import IntegrityError
 from bs4 import BeautifulSoup
 import requests
+import sys
 
 API_BASE_URL = "https://api.spoonacular.com/recipes/"
 key = "e04fa2cf19db48a2a68c53f3f6d8d84c"
@@ -20,6 +23,57 @@ CURR_USER_KEY = "curr_user"
 
 
 connect_db(app)
+
+##############################################################################
+# Cache functions
+
+
+def get_recipe_from_db_or_404(recipe_id):
+    recipe = Recipes.query.get(recipe_id)
+    if not recipe:
+        # Not found in DB, need to fetch from API
+        print(f'Recipe #{recipe_id} not found in database')
+        res = requests.get(
+            f"{API_BASE_URL}/{recipe_id}/information", params={"apiKey": key})
+        results = res.json()
+        if res.status_code == 200 and results["id"] == recipe_id:
+            print(f'Recipe #{recipe_id} fetched from API')
+            # Valid ID from API, need to cache ingredients first, and then recipe
+            recipe = Recipes(
+                id=recipe_id,
+                title=results["title"],
+                summary=results["summary"],
+                image=results["image"],
+                readyInMinutes=results["readyInMinutes"],
+                instructions=results["instructions"],
+                vegetarian=results["vegetarian"],
+                vegan=results["vegan"],
+                glutenFree=results["glutenFree"],
+                dairyFree=results["dairyFree"],
+            )
+
+            for i in results["extendedIngredients"]:
+                ingredient = Ingredients.query.get(i["id"])
+                if not ingredient:
+                    # Ingredient not found in DB, need to store first
+                    print(
+                        f'Ingredient #{i["id"]} not found in database')
+                    ingredient = Ingredients(
+                        id=i["id"],
+                        name=i["name"],
+                    )
+                    db.session.add(ingredient)
+                    db.session.commit()
+                recipe.ingr.append(ingredient)
+
+            db.session.add(recipe)
+            db.session.commit()
+    else:
+        print(f'Recipe #{recipe_id} loaded from database')
+
+    # Always filled in cache if exists
+    return Recipes.query.get_or_404(recipe_id)
+
 
 ##############################################################################
 # User signup/login/logout
@@ -135,11 +189,12 @@ def handle_search():
         r["summary"] = str(soup)
     return render_template("search.html", query=query, search_results=results)
 
+
 @app.route("/recipe/<int:recipe_id>")
 def get_recipe_detail(recipe_id):
-    res = requests.get(f"{API_BASE_URL}/{recipe_id}/information", params={"apiKey": key})
-    results = res.json()
-    return render_template("recipe.html", info_recipe=results)
+    recipe = get_recipe_from_db_or_404(recipe_id)
+    return render_template("recipe.html", recipe=recipe)
+
 
 @app.route("/<int:user_id>/favorites")
 def show_favorite(user_id):
@@ -150,8 +205,22 @@ def show_favorite(user_id):
     user = User.query.get_or_404(user_id)
     return render_template('favorites.html', user=user, favorites=user.recipes)
 
+
 @app.route("/recipe/<int:recipe_id>/favorite", methods=["POST"])
 def add_favorite(recipe_id):
-    if not g.user:
-        flash("Access unauthorized.", "danger")
-        return redirect("/")
+    pass
+    # if not g.user:
+    #     flash("Access unauthorized.", "danger")
+    #     return redirect("/")
+
+    # res = requests.get(f"{API_BASE_URL}/{recipe_id}/information", params={"apiKey": key})
+    # results = res.json()
+
+    # favorited = Recipes.query_get_or_404(id)
+
+    # if favorited.user.id == g.user.id:
+    #     return abort(403)
+
+    # db.session.commit()
+
+    # return redirect("/")

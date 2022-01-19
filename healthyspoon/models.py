@@ -7,11 +7,13 @@ from sqlalchemy import exc
 bcrypt = Bcrypt()
 db = SQLAlchemy()
 
+
 def connect_db(app):
     """Connect to database"""
 
     db.app = app
     db.init_app(app)
+
 
 class User(db.Model):
     __tablename__ = "users"
@@ -22,7 +24,8 @@ class User(db.Model):
     email = db.Column(db.String(50), nullable=False)
     location = db.Column(db.String(50), nullable=False)
 
-    recipes = db.relationship('Recipes', secondary='recipes_users', backref='users')
+    recipes = db.relationship(
+        'Recipes', secondary='recipes_users', backref='users')
 
     @classmethod
     def register(cls, username, password, email, location):
@@ -55,15 +58,17 @@ class User(db.Model):
         else:
             return False
 
+
 class Recipes(db.Model):
     __tablename__ = "recipes"
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    title = db.Column(db.String(50), unique=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.Text, unique=True, nullable=False)
     summary = db.Column(db.Text, nullable=False)
     image = db.Column(db.Text, nullable=False)
-    steps = db.Column(db.String(50), nullable=False)
-    vegeterian = db.Column(db.Boolean, default=False, nullable=False)
+    readyInMinutes = db.Column(db.Integer, nullable=False)
+    instructions = db.Column(db.Text, nullable=False)
+    vegetarian = db.Column(db.Boolean, default=False, nullable=False)
     vegan = db.Column(db.Boolean, default=False, nullable=False)
     glutenFree = db.Column(db.Boolean, default=False, nullable=False)
     dairyFree = db.Column(db.Boolean, default=False, nullable=False)
@@ -73,49 +78,54 @@ class Recipes(db.Model):
 
     def serialize(self):
         return {'id': self.id,
-            'title': self.title,
-            'summary': self.summary,
-            'image': self.image,
-            'steps': self.steps,
-            'vegeterian': self.vegeterian,
-            'vegan': self.vegan,
-            'glutenFree' : self.glutenFree,
-            'dairyFree' : self.dairyFree
-        }
+                'title': self.title,
+                'summary': self.summary,
+                'image': self.image,
+                'readyInMinutes': self.readyInMinutes,
+                'instructions': self.instructions,
+                'vegetarian': self.vegetarian,
+                'vegan': self.vegan,
+                'glutenFree': self.glutenFree,
+                'dairyFree': self.dairyFree
+                }
+
 
 class RecipesUsers(db.Model):
     __tablename__ = "recipes_users"
 
     recipes_id = db.Column(db.Integer,
-                       db.ForeignKey("recipes.id"),
-                       primary_key=True)
+                           db.ForeignKey("recipes.id"),
+                           primary_key=True)
     user_id = db.Column(db.Integer,
-                       db.ForeignKey("users.id"),
-                       primary_key=True)
+                        db.ForeignKey("users.id"),
+                        primary_key=True)
 
     def __repr__(self):
         return f"<RecipesUsers {self.recipes_id} - {self.user_id}>"
 
-class Ingredients(db.Model):
-    __tablename__= "ingredients"
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+class Ingredients(db.Model):
+    __tablename__ = "ingredients"
+
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
 
-    recipes = db.relationship('Recipes', secondary='recipes_ingr', backref='ingr')
+    recipes = db.relationship(
+        'Recipes', secondary='recipes_ingr', backref='ingr')
 
     def __repr__(self):
         return f"<Ingredients {self.id} : {self.name}>"
+
 
 class RecipesIngredients(db.Model):
     __tablename__ = "recipes_ingr"
 
     recipes_id = db.Column(db.Integer,
-                       db.ForeignKey("recipes.id"),
-                       primary_key=True)
+                           db.ForeignKey("recipes.id"),
+                           primary_key=True)
     ingr_id = db.Column(db.Integer,
-                       db.ForeignKey("ingredients.id"),
-                       primary_key=True)
+                        db.ForeignKey("ingredients.id"),
+                        primary_key=True)
 
     def __repr__(self):
         return f"<RecipesIngredients {self.recipes_id} - {self.ingr_id}>"

@@ -3,14 +3,31 @@
 {% block content %}
 <div class="container">
     <h2> Recipe details</h2>
-    <li>Recipe Name : {{ info_recipe.title }}</li>
-    <img src="{{ info_recipe['image'] }}">
-    <li>Ready in {{ info_recipe["readyInMinutes"] }} min</li>
+    <li>Recipe Name : {{ recipe.title }}</li>
+
+    <form action="/recipe/{{ recipe.id }}/favorite" method="post">
+        {% if favorited %}
+        <input class="button" id="red-heart" type="image"
+            src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678087-heart-512.png"><a>Remove from your favorites</a>
+        {% else %}
+        <input class="button" id="white-heart" type="image"
+            src="https://icons-for-free.com/iconfiles/png/512/heart-131965017458786724.png"><a>Add to your favorites</a>
+        {% endif %}
+    </form>
+
+    <img src="{{ recipe.image }}">
+    <li>Ready in {{ recipe.readyInMinutes }} min</li>
     <li>Instructions:
-
-        {{ info_recipe.instructions }}</li>
-
+        {{ recipe.instructions | safe }}</li>
+    <li>
+        Ingredients:
+        <ul>
+            {% for ingredient in recipe.ingr %}
+            <li>{{ ingredient.name }}</li>
+            {% endfor %}
+        </ul>
     </li>
+
 </div>
 
 

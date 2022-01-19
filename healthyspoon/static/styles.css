@@ -21,3 +21,8 @@
 nav {
     overflow: auto;
 }
+
+#white-heart, #red-heart {
+    width: 50px;
+    height: auto;
+}
