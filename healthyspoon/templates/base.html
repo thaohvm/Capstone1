@@ -18,12 +18,15 @@
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
 
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">Healthy Spoon</a>
+            <a class="navbar-brand" href="/">Diet Spoon</a>
         </div>
 
         <div class="navbar-collapse collapse">
             <ul class="navbar-nav">
                 {% if g.user %}
+                <li class="nav-item">
+                    <a class="nav-link active" href="/{{ g.user.id }}/favorites">My Favorites</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link active" href="{{ url_for('logout') }}">Logout</a>
                 </li>

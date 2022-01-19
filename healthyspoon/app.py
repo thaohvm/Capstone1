@@ -140,3 +140,18 @@ def get_recipe_detail(recipe_id):
     res = requests.get(f"{API_BASE_URL}/{recipe_id}/information", params={"apiKey": key})
     results = res.json()
     return render_template("recipe.html", info_recipe=results)
+
+@app.route("/<int:user_id>/favorites")
+def show_favorite(user_id):
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    user = User.query.get_or_404(user_id)
+    return render_template('favorites.html', user=user, favorites=user.recipes)
+
+@app.route("/recipe/<int:recipe_id>/favorite", methods=["POST"])
+def add_favorite(recipe_id):
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
