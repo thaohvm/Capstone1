@@ -2,33 +2,58 @@
 
 {% block content %}
 <div class="container">
-    <h2> Recipe details</h2>
-    <li>Recipe Name : {{ recipe.title }}</li>
+    <div class="recipe-details">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">{{ recipe.title }}</h2>
+                {% if recipe.vegetarian %}
+                <img class="diet-icon" src="/static/checked.jpeg"><a class="diet-text">Vegetarian</a>
+                {% endif %}
+                {% if recipe.vegan %}
+                <img class="diet-icon" src="/static/checked.jpeg"><a class="diet-text">Vegan</a>
+                {% endif %}
+                {% if recipe.glutenFree %}
+                <img class="diet-icon" src="/static/checked.jpeg"><a class="diet-text">Gluten Free</a>
+                {% endif %}
+                {% if recipe.dairyFree %}
+                <img class="diet-icon" src="/static/checked.jpeg"><a class="diet-text">Diet Free</a>
+                {% endif %}
 
-    <form action="/recipe/{{ recipe.id }}/favorite" method="post">
-        {% if favorited %}
-        <input class="button" id="red-heart" type="image"
-            src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678087-heart-512.png"><a>Remove from your favorites</a>
-        {% else %}
-        <input class="button" id="white-heart" type="image"
-            src="https://icons-for-free.com/iconfiles/png/512/heart-131965017458786724.png"><a>Add to your favorites</a>
-        {% endif %}
-    </form>
+                <form action="/recipe/{{ recipe.id }}/favorite" method="post">
+                    {{ favorite_form.csrf_token() }}
+                    {{ favorite_form.favorited() }}
+                    {% if favorited %}
+                    <input class="button" id="red-heart" type="image"
+                        src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678087-heart-512.png">Remove from
+                    favorite
+                    {% else %}
+                    <input class="button" id="white-heart" type="image"
+                        src="https://icons-for-free.com/iconfiles/png/512/heart-131965017458786724.png">Add to favorite
+                    {% endif %}
+                </form>
 
-    <img src="{{ recipe.image }}">
-    <li>Ready in {{ recipe.readyInMinutes }} min</li>
-    <li>Instructions:
-        {{ recipe.instructions | safe }}</li>
-    <li>
-        Ingredients:
-        <ul>
-            {% for ingredient in recipe.ingr %}
-            <li>{{ ingredient.name }}</li>
-            {% endfor %}
-        </ul>
-    </li>
+                <div class="card-img-top">
+                    <img src="{{ recipe.image }}">
+                    <li>Ready in {{ recipe.readyInMinutes }} min</li>
+                    <li>
+                        Ingredients:
+                        <ul>
+                            {% for ingredient in recipe.ingr %}
+                            <li>{{ ingredient.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <li>Instructions:
+                        {{ recipe.instructions | safe }}</li>
+                </div>
+            </div>
+        </div>
 
+
+
+
+
+    </div>
 </div>
-
 
 {% endblock %}

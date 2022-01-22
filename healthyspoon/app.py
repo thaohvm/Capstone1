@@ -2,7 +2,7 @@ from email.mime import image
 from traceback import StackSummary
 from turtle import title
 from flask import Flask, request, redirect, render_template, session, g, flash, jsonify, abort
-from forms import RegisterForm, LoginForm
+from forms import RegisterForm, LoginForm, FavoriteForm
 from models import db, connect_db, User, RecipesUsers, Recipes, Ingredients, RecipesIngredients
 from sqlalchemy.exc import IntegrityError
 from bs4 import BeautifulSoup
@@ -173,7 +173,12 @@ def logout():
 
 @app.route("/")
 def homepage():
-    return render_template("index.html")
+    user_country = g.user.location
+    similar_users = User.query.filter(User.location.like(f"%{user_country}%")).all()
+    saved_recipes = []
+    for user in similar_users:
+        saved_recipes.extend(user.recipes)
+    return render_template("index.html", saved_recipes=saved_recipes)
 
 
 @app.route("/search")
@@ -193,7 +198,9 @@ def handle_search():
 @app.route("/recipe/<int:recipe_id>")
 def get_recipe_detail(recipe_id):
     recipe = get_recipe_from_db_or_404(recipe_id)
-    return render_template("recipe.html", recipe=recipe)
+    favorited = bool(g.user and g.user.recipes.filter_by(id=recipe_id).first())
+    favorite_form = FavoriteForm(favorited=str(favorited))
+    return render_template("recipe.html", recipe=recipe, favorite_form=favorite_form, favorited=favorited)
 
 
 @app.route("/<int:user_id>/favorites")
@@ -201,26 +208,27 @@ def show_favorite(user_id):
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
-
     user = User.query.get_or_404(user_id)
     return render_template('favorites.html', user=user, favorites=user.recipes)
 
 
 @app.route("/recipe/<int:recipe_id>/favorite", methods=["POST"])
 def add_favorite(recipe_id):
-    pass
-    # if not g.user:
-    #     flash("Access unauthorized.", "danger")
-    #     return redirect("/")
 
-    # res = requests.get(f"{API_BASE_URL}/{recipe_id}/information", params={"apiKey": key})
-    # results = res.json()
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
 
-    # favorited = Recipes.query_get_or_404(id)
-
-    # if favorited.user.id == g.user.id:
-    #     return abort(403)
-
-    # db.session.commit()
-
-    # return redirect("/")
+    recipe = get_recipe_from_db_or_404(recipe_id)
+    form = FavoriteForm()
+    if form.validate_on_submit():
+        favorited = form.favorited.data == "True"
+        if favorited:
+            # Remove favorite
+            g.user.recipes.remove(recipe)
+            db.session.commit()
+        else:
+            # Add favorite
+            g.user.recipes.append(recipe)
+            db.session.commit()
+    return redirect(f"/recipe/{recipe_id}")

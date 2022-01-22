@@ -3,7 +3,24 @@
 {% block content %}
 
 <div class="container">
-    <h2>My Favorite Recipes</h2>
+    <div class="recipe-favorite">
+        <h2>My Favorite Recipes</h2>
+    {% for favorite in favorites %}
+        <li>{{ favorite.title }}</li>
+        <img src="{{ favorite.image }}">
+        <li>Ready in {{ favorite.readyInMinutes }} min</li>
+        <li>Instructions:
+            {{ favorite.instructions | safe }}</li>
+        <li>
+            Ingredients:
+            <ul>
+                {% for ingredient in favorite.ingr %}
+                <li>{{ ingredient.name }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+    </div>
 </div>
 
 {% endblock %}

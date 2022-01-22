@@ -25,7 +25,7 @@ class User(db.Model):
     location = db.Column(db.String(50), nullable=False)
 
     recipes = db.relationship(
-        'Recipes', secondary='recipes_users', backref='users')
+        'Recipes', secondary='recipes_users', backref='users', lazy="dynamic")
 
     @classmethod
     def register(cls, username, password, email, location):
@@ -111,7 +111,7 @@ class Ingredients(db.Model):
     name = db.Column(db.String(50), unique=True, nullable=False)
 
     recipes = db.relationship(
-        'Recipes', secondary='recipes_ingr', backref='ingr')
+        'Recipes', secondary='recipes_ingr', backref='ingr', lazy="dynamic")
 
     def __repr__(self):
         return f"<Ingredients {self.id} : {self.name}>"

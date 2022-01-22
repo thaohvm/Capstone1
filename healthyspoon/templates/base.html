@@ -42,8 +42,23 @@
         </div>
 
     </nav>
+    <div class="main">
+        <img class="img-bg"
+            src="https://online.ahu.edu/wp-content/uploads/2019/03/Healthy-Food-Doesnt-Have-To-Be-Expensive-1024x576.jpg"
+            alt="">
+
+        <div class="message">
+            {% for category, msg in get_flashed_messages(with_categories=True) %}
+            <div class="alert {{category}}">
+                {{msg}}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
     {% block content %}
     {% endblock %}
+    <!-- <script src="https://unpkg.com/axios/dist/axios.js"></script> -->
 </body>
 
 </html>

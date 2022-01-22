@@ -14,15 +14,36 @@
 .img-bg {
     opacity: 0.3;
     position: absolute;
-    height: 100%;
+    min-width: 100%;
+    min-height: 100%;
     background-repeat: no-repeat;
     background-color: #000;
+    position: fixed;
 }
 nav {
     overflow: auto;
+    position: fixed;
+    top: 0;
+    width: 100%
 }
 
 #white-heart, #red-heart {
     width: 50px;
     height: auto;
+}
+
+.diet-icon {
+    width: 20px;
+}
+
+.diet-text {
+    font-size: x-small;
+}
+
+.recipe-details, .recipe-favorite, .recipe-search {
+    padding: 2rem;
+}
+
+.recipe-saved {
+    padding: 3rem;
 }

@@ -32,13 +32,21 @@
         </div>
     </div>
 
-    <div>
-        <h3>Random recipes</h3>
-        {% for recipe in recipes %}
-        <ul>
-            <li>{{ recipe.title }}</li>
-        </ul>
-        {% endfor %}
+    <div class="recipe-saved">
+        <h2>Try recipes saved by people from your country</h2>
+        <div class="row">
+            {% for saved_recipe in saved_recipes %}
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-body">
+                        <img class="card-img-top" src="{{ saved_recipe.image }}">
+                        <div class="card-body">
+                            <a href="/recipe/{{ saved_recipe.id }}">{{ saved_recipe.title }}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
-</div>
-{% endblock %}
+    {% endblock %}
