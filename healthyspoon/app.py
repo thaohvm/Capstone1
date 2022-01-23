@@ -173,12 +173,15 @@ def logout():
 
 @app.route("/")
 def homepage():
-    user_country = g.user.location
-    similar_users = User.query.filter(User.location.like(f"%{user_country}%")).all()
-    saved_recipes = []
-    for user in similar_users:
-        saved_recipes.extend(user.recipes)
-    return render_template("index.html", saved_recipes=saved_recipes)
+    if g.user:
+        user_country = g.user.location
+        similar_users = User.query.filter(User.location.like(f"%{user_country}%")).all()
+        saved_recipes = []
+        for user in similar_users:
+            saved_recipes.extend(user.recipes)
+        return render_template("index.html", saved_recipes=saved_recipes)
+    else:
+        return render_template("index.html")
 
 
 @app.route("/search")

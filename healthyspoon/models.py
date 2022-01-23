@@ -27,6 +27,9 @@ class User(db.Model):
     recipes = db.relationship(
         'Recipes', secondary='recipes_users', backref='users', lazy="dynamic")
 
+    def __repr__(self):
+        return f"<User #{self.id}: {self.username}, {self.email}, {self.location}>"
+
     @classmethod
     def register(cls, username, password, email, location):
         """Register user w/hashed password and return user"""
