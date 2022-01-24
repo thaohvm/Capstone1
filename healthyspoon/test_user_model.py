@@ -76,3 +76,8 @@ class UserModelTestCase(TestCase):
         """Does repr work?"""
 
         self.assertEqual(repr(self.u1), '<User #1111: test1, email1@email.com, United State>')
+
+    def test_valid_authentication(self):
+        u = User.authenticate(self.u1.username, "password")
+        self.assertIsNotNone(u)
+        self.assertEqual(u.id, self.uid1)
