@@ -168,7 +168,7 @@ def logout():
     return redirect("/")
 
 ##############################################################################
-# Homepage and error pages
+# Homepage
 
 
 @app.route("/")
