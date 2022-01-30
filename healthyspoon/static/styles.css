@@ -47,3 +47,11 @@ nav {
 .recipe-saved {
     padding: 3rem;
 }
+
+#btn-search {
+    background-color: #e7e7e7;
+    color: black;;
+    font-size: 18px;
+    padding: 6px 20px;
+    border-radius: 8px;
+}

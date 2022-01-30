@@ -1,25 +1,30 @@
 {% extends "base.html" %}
-
+<title>{% block title %}My Favorite{% endblock %}</title>
 {% block content %}
 
 <div class="container">
-    <div class="recipe-favorite">
-        <h2>My Favorite Recipes</h2>
-    {% for favorite in favorites %}
-        <li>{{ favorite.title }}</li>
-        <img src="{{ favorite.image }}">
-        <li>Ready in {{ favorite.readyInMinutes }} min</li>
-        <li>Instructions:
-            {{ favorite.instructions | safe }}</li>
-        <li>
-            Ingredients:
-            <ul>
-                {% for ingredient in favorite.ingr %}
-                <li>{{ ingredient.name }}</li>
+    <div class="card">
+        <div class="card-body">
+            <div class="recipe-favorite">
+                <h1>My Favorite Recipes</h1>
+
+                {% for favorite in favorites %}
+                <h3>{{ favorite.title }}</h3>
+                <img src="{{ favorite.image }}">
+                <li>Ready in {{ favorite.readyInMinutes }} min</li>
+                <li>Instructions:
+                    {{ favorite.instructions | safe }}</li>
+                <li>
+                    Ingredients:
+                    <ul>
+                        {% for ingredient in favorite.ingr %}
+                        <li>{{ ingredient.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
                 {% endfor %}
-            </ul>
-        </li>
-    {% endfor %}
+            </div>
+        </div>
     </div>
 </div>
 

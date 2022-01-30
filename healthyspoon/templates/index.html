@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+<title>{% block title %}Search{% endblock %}</title>
 {% block content %}
 
 
@@ -21,11 +21,9 @@
             <div class="col-10">
                 <form action="/search" class="domain-form">
                     <div class="form-group d-md-flex">
-
-                        <input name="query" type="text" class="form-control px-4"
+                        <input name="query" type="text" id="query" class="form-control px-4"
                             placeholder="Search by recipes, ingredient...">
-                        <button type="submit" class="search-domain btn btn-primary px-5">Search</button>
-
+                        <button type="submit" class="search-domain btn btn-primary px-5" id="btn-search"><b>Search</b></button>
                     </div>
                 </form>
             </div>
@@ -33,7 +31,7 @@
     </div>
     {% if g.user %}
     <div class="recipe-saved">
-        <h2>Try recipes saved by people from your country</h2>
+        <h1>Try recipes saved by people from your country</h2>
         <div class="row">
             {% for saved_recipe in saved_recipes %}
             <div class="col-sm-3">

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+<title>{% block title %}Search results {% endblock %}</title>
 {% block content %}
 <div class="container">
     <div class="recipe-search">
@@ -10,22 +10,22 @@
                     {% for recipe in search_results %}
                     <div class="col-6">
                         <div class="card">
-                            <img class="card-img-top" src="{{ recipe['image'] }}">
+                            <img class="card-img-top" src="{{ recipe['image'] }}" alt="{{ recipe['title'] }}">
                             <div class="card-body">
-                                <p>Recipe name: <a href="/recipe/{{ recipe['id'] }}">{{ recipe['title'] }}</a></p>
+                                <p>Recipe name: <a href="/recipe/{{ recipe['id'] }}" style="color:black;"><b>{{ recipe['title'] }}</b></a></p>
                                 <!-- <li>Summary: {{ recipe["summary"] | safe }}</li> -->
                                 <p>Ready in {{ recipe.readyInMinutes }} min</p>
                                 {% if recipe.vegetarian %}
-                                <img class="diet-icon" src="static/checked.jpeg"><a class="diet-text">Vegetarian</a>
+                                <img class="diet-icon" src="static/checked.jpeg" alt="{{ recipe.vegetarian }}"><a class="diet-text">Vegetarian</a>
                                 {% endif %}
                                 {% if recipe.vegan %}
-                                <img class="diet-icon" src="static/checked.jpeg"><a class="diet-text">Vegan</a>
+                                <img class="diet-icon" src="static/checked.jpeg" alt="{{ recipe.vegan }}"><a class="diet-text">Vegan</a>
                                 {% endif %}
                                 {% if recipe.glutenFree %}
-                                <img class="diet-icon" src="static/checked.jpeg"><a class="diet-text">Gluten Free</a>
+                                <img class="diet-icon" src="static/checked.jpeg" alt="{{ recipe.glutenFree }}"><a class="diet-text">Gluten Free</a>
                                 {% endif %}
                                 {% if recipe.dairyFree %}
-                                <img class="diet-icon" src="static/checked.jpeg"><a class="diet-text">Diet Free</a>
+                                <img class="diet-icon" src="static/checked.jpeg" alt="{{ recipe.dairyFree }}"><a class="diet-text">Diet Free</a>
                                 {% endif %}
                             </div>
                         </div>
