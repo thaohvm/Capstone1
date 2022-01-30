@@ -1,9 +1,17 @@
-from app import app, CURR_USER_KEY
 import os
 from unittest import TestCase
-from models import db, connect_db, User, Recipes, Ingredients, RecipesIngredients, RecipesUsers
+from models import (
+    db,
+    User,
+    Recipes,
+    Ingredients,
+    RecipesIngredients,
+    RecipesUsers,
+)
 
-os.environ['DATABASE_URL'] = "postgresql:///healthy_spoon_test"
+os.environ["DATABASE_URL"] = "postgresql:///healthy_spoon_test"
+
+from app import app, CURR_USER_KEY
 
 
 def clear_database(model_name):
@@ -17,7 +25,7 @@ def clear_database(model_name):
 db.drop_all()
 db.create_all()
 
-app.config['WTF_CSRF_ENABLED'] = False
+app.config["WTF_CSRF_ENABLED"] = False
 
 
 class LoginViewTestCase(TestCase):
@@ -32,18 +40,20 @@ class LoginViewTestCase(TestCase):
         for model in [User, Recipes, RecipesUsers, RecipesIngredients, Ingredients]:
             clear_database(model)
 
-        testuser1 = User.register(username="testuser1",
-                                    email="test1@test.com",
-                                    password="password1",
-                                    location="United State"
-                                    )
+        testuser1 = User.register(
+            username="testuser1",
+            email="test1@test.com",
+            password="password1",
+            location="United State",
+        )
         testuserid1 = 1111
         testuser1.id = testuserid1
-        testuser2 = User.register(username="testuser2",
-                                    email="test2@test.com",
-                                    password="password2",
-                                    location="United State"
-                                    )
+        testuser2 = User.register(
+            username="testuser2",
+            email="test2@test.com",
+            password="password2",
+            location="United State",
+        )
         testuserid2 = 2222
         testuser2.id = testuserid2
         db.session.add(testuser1)
@@ -69,10 +79,11 @@ class LoginViewTestCase(TestCase):
         """Test the log in function is worked if right username, password is filled"""
         with self.client as c:
 
-            resp = c.post("/login", data={
-                "username": "testuser1",
-                "password": "password1"
-            }, follow_redirects=True)
+            resp = c.post(
+                "/login",
+                data={"username": "testuser1", "password": "password1"},
+                follow_redirects=True,
+            )
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
@@ -82,17 +93,18 @@ class LoginViewTestCase(TestCase):
         """Test the function is not worked if wrong password is filled"""
         with self.client as c:
 
-            resp = c.post("/login", data={
-                "username": "testuser1",
-                "password": "wrongpassword1"
-            }, follow_redirects=True)
+            resp = c.post(
+                "/login",
+                data={"username": "testuser1", "password": "wrongpassword1"},
+                follow_redirects=True,
+            )
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
             self.assertIn("Login", html)
 
     def test_register_form(self):
-        """Test the register form is displayed and rendered correctly """
+        """Test the register form is displayed and rendered correctly"""
         with self.client as c:
 
             resp = c.get("/signup")
@@ -105,14 +117,18 @@ class LoginViewTestCase(TestCase):
             self.assertIn("Location", html)
 
     def test_signup_user(self):
-        """Test new user can sign up with valid account """
+        """Test new user can sign up with valid account"""
         with self.client as c:
-            resp = c.post("/signup", data={
-                "username": "testuser3",
-                "password": "password3",
-                "email": "test3@test.com",
-                "location": "United State",
-                }, follow_redirects=True)
+            resp = c.post(
+                "/signup",
+                data={
+                    "username": "testuser3",
+                    "password": "password3",
+                    "email": "test3@test.com",
+                    "location": "United State",
+                },
+                follow_redirects=True,
+            )
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
@@ -121,12 +137,16 @@ class LoginViewTestCase(TestCase):
     def test_duplicate_user_signup(self):
         """Test user can sign up with the account which have been registered before"""
         with self.client as c:
-            resp = c.post("/signup", data={
-                "username": "testuser1",
-                "password": "password1",
-                "email": "test1@test.com",
-                "location": "United State",
-                }, follow_redirects=True)
+            resp = c.post(
+                "/signup",
+                data={
+                    "username": "testuser1",
+                    "password": "password1",
+                    "email": "test1@test.com",
+                    "location": "United State",
+                },
+                follow_redirects=True,
+            )
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
@@ -140,8 +160,8 @@ class LoginViewTestCase(TestCase):
             with c.session_transaction() as sess:
                 sess[CURR_USER_KEY] = testuser1.id
 
-            resp = c.get("/logout",follow_redirects=True)
+            resp = c.get("/logout", follow_redirects=True)
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
-            self.assertIn("Login",html)
+            self.assertIn("Login", html)

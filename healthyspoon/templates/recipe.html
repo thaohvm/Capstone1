@@ -18,9 +18,11 @@
                 {% if recipe.dairyFree %}
                 <img class="diet-icon" src="/static/checked.jpeg"><a class="diet-text">Diet Free</a>
                 {% endif %}
-
+                {% if g.user %}
                 <form action="/recipe/{{ recipe.id }}/favorite" method="post">
+                    {% if favorite_form.csrf_token is defined %}
                     {{ favorite_form.csrf_token() }}
+                    {% endif %}
                     {{ favorite_form.favorited() }}
                     {% if favorited %}
                     <input class="button" id="red-heart" type="image"
@@ -31,7 +33,7 @@
                         src="https://icons-for-free.com/iconfiles/png/512/heart-131965017458786724.png">Add to favorite
                     {% endif %}
                 </form>
-
+                {% endif %}
                 <div class="card-img-top">
                     <img src="{{ recipe.image }}">
                     <li>Ready in {{ recipe.readyInMinutes }} min</li>

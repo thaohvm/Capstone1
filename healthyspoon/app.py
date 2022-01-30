@@ -1,23 +1,31 @@
-from email.mime import image
-from traceback import StackSummary
-from turtle import title
-from flask import Flask, request, redirect, render_template, session, g, flash, jsonify, abort
+from flask import (
+    Flask,
+    flash,
+    make_response,
+    g,
+    request,
+    redirect,
+    render_template,
+    session,
+)
 from forms import RegisterForm, LoginForm, FavoriteForm
-from models import db, connect_db, User, RecipesUsers, Recipes, Ingredients, RecipesIngredients
+from models import db, connect_db, User, Recipes, Ingredients
 from sqlalchemy.exc import IntegrityError
 from bs4 import BeautifulSoup
+import os
 import requests
-import sys
 
 API_BASE_URL = "https://api.spoonacular.com/recipes/"
 key = "e04fa2cf19db48a2a68c53f3f6d8d84c"
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///healthy_spoon'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ECHO'] = True
-app.config['SECRET_KEY'] = "secret-key"
-app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
+    "DATABASE_URL", "postgresql:///healthy_spoon"
+)
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SQLALCHEMY_ECHO"] = True
+app.config["SECRET_KEY"] = "secret-key"
+app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
 
 CURR_USER_KEY = "curr_user"
 
@@ -32,12 +40,13 @@ def get_recipe_from_db_or_404(recipe_id):
     recipe = Recipes.query.get(recipe_id)
     if not recipe:
         # Not found in DB, need to fetch from API
-        print(f'Recipe #{recipe_id} not found in database')
+        print(f"Recipe #{recipe_id} not found in database")
         res = requests.get(
-            f"{API_BASE_URL}/{recipe_id}/information", params={"apiKey": key})
+            f"{API_BASE_URL}/{recipe_id}/information", params={"apiKey": key}
+        )
         results = res.json()
         if res.status_code == 200 and results["id"] == recipe_id:
-            print(f'Recipe #{recipe_id} fetched from API')
+            print(f"Recipe #{recipe_id} fetched from API")
             # Valid ID from API, need to cache ingredients first, and then recipe
             recipe = Recipes(
                 id=recipe_id,
@@ -56,8 +65,7 @@ def get_recipe_from_db_or_404(recipe_id):
                 ingredient = Ingredients.query.get(i["id"])
                 if not ingredient:
                     # Ingredient not found in DB, need to store first
-                    print(
-                        f'Ingredient #{i["id"]} not found in database')
+                    print(f'Ingredient #{i["id"]} not found in database')
                     ingredient = Ingredients(
                         id=i["id"],
                         name=i["name"],
@@ -69,7 +77,7 @@ def get_recipe_from_db_or_404(recipe_id):
             db.session.add(recipe)
             db.session.commit()
     else:
-        print(f'Recipe #{recipe_id} loaded from database')
+        print(f"Recipe #{recipe_id} loaded from database")
 
     # Always filled in cache if exists
     return Recipes.query.get_or_404(recipe_id)
@@ -103,7 +111,7 @@ def do_logout():
         del session[CURR_USER_KEY]
 
 
-@app.route('/signup', methods=["GET", "POST"])
+@app.route("/signup", methods=["GET", "POST"])
 def signup():
     """Handle user signup.
 
@@ -123,49 +131,49 @@ def signup():
                 username=form.username.data,
                 password=form.password.data,
                 email=form.email.data,
-                location=form.location.data
+                location=form.location.data,
             )
             db.session.commit()
 
         except IntegrityError:
-            flash("Username already taken", 'danger')
-            return render_template('signup.html', form=form)
+            flash("Username already taken", "danger")
+            return render_template("signup.html", form=form)
 
         do_login(user)
 
         return redirect("/")
 
     else:
-        return render_template('signup.html', form=form)
+        return render_template("signup.html", form=form)
 
 
-@app.route('/login', methods=["GET", "POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     """Handle user login."""
 
     form = LoginForm()
 
     if form.validate_on_submit():
-        user = User.authenticate(form.username.data,
-                                 form.password.data)
+        user = User.authenticate(form.username.data, form.password.data)
 
         if user:
             do_login(user)
             flash(f"Hello, {user.username}!", "success")
             return redirect("/")
 
-        flash("Invalid credentials.", 'danger')
+        flash("Invalid credentials.", "danger")
 
-    return render_template('login.html', form=form)
+    return render_template("login.html", form=form)
 
 
-@app.route('/logout')
+@app.route("/logout")
 def logout():
     """Handle logout of user."""
 
     do_logout()
     flash("You have successfully logout!", "success")
     return redirect("/")
+
 
 ##############################################################################
 # Homepage
@@ -187,12 +195,14 @@ def homepage():
 @app.route("/search")
 def handle_search():
     query = request.args["query"]
-    res = requests.get(f"{API_BASE_URL}/complexSearch", params={"apiKey": key,
-                       "query": {query}, "addRecipeInformation": "true"})
+    res = requests.get(
+        f"{API_BASE_URL}/complexSearch",
+        params={"apiKey": key, "query": {query}, "addRecipeInformation": "true"},
+    )
     results = res.json()["results"]
     for r in results:
         soup = BeautifulSoup(r["summary"])
-        for a in soup.findAll('a'):
+        for a in soup.findAll("a"):
             a.replaceWithChildren()
         r["summary"] = str(soup)
     return render_template("search.html", query=query, search_results=results)
@@ -203,16 +213,18 @@ def get_recipe_detail(recipe_id):
     recipe = get_recipe_from_db_or_404(recipe_id)
     favorited = bool(g.user and g.user.recipes.filter_by(id=recipe_id).first())
     favorite_form = FavoriteForm(favorited=str(favorited))
-    return render_template("recipe.html", recipe=recipe, favorite_form=favorite_form, favorited=favorited)
+    return render_template(
+        "recipe.html", recipe=recipe, favorite_form=favorite_form, favorited=favorited
+    )
 
 
 @app.route("/<int:user_id>/favorites")
 def show_favorite(user_id):
     if not g.user:
         flash("Access unauthorized.", "danger")
-        return redirect("/")
+        return make_response("Access unauthorized.", 401)
     user = User.query.get_or_404(user_id)
-    return render_template('favorites.html', user=user, favorites=user.recipes)
+    return render_template("favorites.html", user=user, favorites=user.recipes)
 
 
 @app.route("/recipe/<int:recipe_id>/favorite", methods=["POST"])
@@ -220,7 +232,7 @@ def add_favorite(recipe_id):
 
     if not g.user:
         flash("Access unauthorized.", "danger")
-        return redirect("/")
+        return make_response("Access unauthorized.", 401)
 
     recipe = get_recipe_from_db_or_404(recipe_id)
     form = FavoriteForm()
@@ -234,4 +246,6 @@ def add_favorite(recipe_id):
             # Add favorite
             g.user.recipes.append(recipe)
             db.session.commit()
+    else:
+        return make_response("Bad form input", 400)
     return redirect(f"/recipe/{recipe_id}")

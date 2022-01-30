@@ -1,28 +1,29 @@
 import os
 from unittest import TestCase
-from sqlalchemy import exc
 
 from models import db, User
 
-os.environ['DATABASE_URL'] = "postgresql:///healthy_spoon_test"
+os.environ["DATABASE_URL"] = "postgresql:///healthy_spoon_test"
 
 from app import app
 
 db.create_all()
 
+
 def create_user():
     u = User(
-            email="test@test.com",
-            username="testuser",
-            password="HASHED_PASSWORD",
-            location="United State"
-        )
+        email="test@test.com",
+        username="testuser",
+        password="HASHED_PASSWORD",
+        location="United State",
+    )
     u.id = 3333
 
     db.session.add(u)
     db.session.commit()
 
     return u
+
 
 class UserModelTestCase(TestCase):
     """Test views for messages."""
@@ -61,7 +62,7 @@ class UserModelTestCase(TestCase):
             email="test@test.com",
             username="testuser",
             password="HASHED_PASSWORD",
-            location="United State"
+            location="United State",
         )
 
         db.session.add(u)
@@ -75,7 +76,9 @@ class UserModelTestCase(TestCase):
     def test_repr(self):
         """Does repr work?"""
 
-        self.assertEqual(repr(self.u1), '<User #1111: test1, email1@email.com, United State>')
+        self.assertEqual(
+            repr(self.u1), "<User #1111: test1, email1@email.com, United State>"
+        )
 
     def test_valid_authentication(self):
         u = User.authenticate(self.u1.username, "password")
