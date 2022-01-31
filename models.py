@@ -1,8 +1,5 @@
-from email.mime import image
-from turtle import title
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-from sqlalchemy import exc
 
 bcrypt = Bcrypt()
 db = SQLAlchemy()
