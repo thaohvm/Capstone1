@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 from flask import (
     Flask,
     flash,
@@ -15,8 +16,9 @@ from bs4 import BeautifulSoup
 import os
 import requests
 
+load_dotenv()
 API_BASE_URL = "https://api.spoonacular.com/recipes/"
-key = "e04fa2cf19db48a2a68c53f3f6d8d84c"
+key = os.environ.get("API_KEY", None)
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
@@ -24,7 +26,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ECHO"] = True
-app.config["SECRET_KEY"] = "secret-key"
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "secret_key")
 app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
 
 CURR_USER_KEY = "curr_user"
