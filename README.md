@@ -18,6 +18,7 @@ The API automatically analyze recipes to check for ingredients that contain comm
 
 ## Technology Stack
 Database: Postgresql
+
 Flask web framework with SQLAlchemy, Jinja, Flask, WTForms
 
 
