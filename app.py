@@ -21,8 +21,11 @@ API_BASE_URL = "https://api.spoonacular.com/recipes/"
 key = os.environ.get("API_KEY", None)
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-    "DATABASE_URL", "postgresql:///healthy_spoon"
+uri = os.environ.get("DATABASE_URL", 'postgresql:///whealthy-spoon')
+if uri.startswith("postgres://"):
+    uri = uri.replace("postgres://", "postgresql://", 1)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = uri
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ECHO"] = True
