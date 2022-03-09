@@ -1,6 +1,10 @@
 # Healthy Spoon Web Application
 Project's title: HealthySpoon.
 
+<img src="https://github.com/thaohvm/Capstone1/blob/master/static/index-image.png?raw=true" width="500">
+<img src="https://github.com/thaohvm/Capstone1/blob/master/static/detail.png?raw=true" width="500">
+<img src="https://github.com/thaohvm/Capstone1/blob/master/static/search-result.png?raw=true" width="500">
+
 ## Built With
 
 This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
