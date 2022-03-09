@@ -1,11 +1,51 @@
 # Healthy Spoon Web Application
 Project's title: HealthySpoon.
 
+## Built With
+
+This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
+
+* [Bootstrap](https://getbootstrap.com)
+* [JQuery](https://jquery.com)
+* [Python](https://jquery.com)
+* [PostSQL]
+* [SQLAlchemy]
+* [Jinja]
+* [Flask]
+* [WTForms]
+* [BeautifulSoup]
 
 This project is deployed on https://healthy-spoon.herokuapp.com/
 
 ## What the website does/ User flow
 Users can register account and need to fill in their information including username, password, email. They can search for recipes which they prefer by ingredients (such as mushroom, egg,..). After the search, they can find a list of recipes that match their requirements. They can click on any of the recipes to see the details of the recipes. In the detail page, users can see all the ingredients, steps of the recipes. If they like the recipes and want to save it to read in the future, they can click on the button “Save to my Favorite” to add the recipes to their personal page. Additionally, they also can see the recipes that saved by others people who is in the same country.
+
+## Getting Started
+### Installation
+1. Get a free API Key at [https://spoonacular.com/food-api/docs](https://spoonacular.com/food-api/docs)
+2. Clone the repo
+   ```sh
+   git clone https://github.com/thaohvm/Capstone1
+   ```
+3. Create database for both running website and testing
+   ```sh
+   createdb healthy-spoon
+   createdb healthy-spoon-test
+   ```
+4. Install environtment requirements
+   cd to the directory where requirements.txt is located
+   ```sh
+   $ python3 -m venv venv
+   $ source venv/bin/activate
+   (env) $ pip install -r requirements.txt
+   ```
+5. Run the website:
+   ```sh
+   (venv) $ python seed.py
+   (venv) $ flask run
+   ```
+6. Go to local website: http://127.0.0.1:5000/
+   or live application at: https://healthy-spoon.herokuapp.com/
 
 ## Features
 - Searching: user can search recipes based on their favorite ingredients or their diet. This features can help user to easily find the recipes that include the ingrdients on their fridge.
@@ -15,12 +55,6 @@ Users can register account and need to fill in their information including usern
 ## APIs: Spoonacular API
 API link: https://spoonacular.com/food-api/docs
 The API automatically analyze recipes to check for ingredients that contain common allergens, such as wheat, dairy, eggs, soy, nuts, etc. They also determine whether a recipe is vegan, vegetarian, Paleo friendly, Whole30 compliant, and more.
-
-## Technology Stack
-Database: Postgresql
-
-Flask web framework with SQLAlchemy, Jinja, Flask, WTForms
-
 
 ## Database Schema
 ![alt database schema](https://github.com/thaohvm/Capstone1/blob/master/docs/DBSchema.png?raw=true)
