@@ -8,12 +8,12 @@ This section should list any major frameworks/libraries used to bootstrap your p
 * [Bootstrap](https://getbootstrap.com)
 * [JQuery](https://jquery.com)
 * [Python](https://jquery.com)
-* [PostSQL]
-* [SQLAlchemy]
-* [Jinja]
-* [Flask]
-* [WTForms]
-* [BeautifulSoup]
+* [PostSQL](https://www.postgresql.org/)
+* [SQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/en/2.x/)
+* [Jinja](https://jinja2docs.readthedocs.io/en/stable/)
+* [Flask](https://flask.palletsprojects.com/en/2.0.x/)
+* [WTForms](https://flask.palletsprojects.com/en/2.0.x/patterns/wtforms/)
+* [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
 
 This project is deployed on https://healthy-spoon.herokuapp.com/
 
@@ -44,9 +44,16 @@ Users can register account and need to fill in their information including usern
    (venv) $ python seed.py
    (venv) $ flask run
    ```
-6. Go to local website: http://127.0.0.1:5000/
+6. Go to local website: http://localhost:5000
    or live application at: https://healthy-spoon.herokuapp.com/
 
+### Testing
+
+   ```sh
+    (venv) $ python -m unittest test_login_logout
+    (venv) $ python -m unittest test_user_model
+    (venv) $ python -m unittest test_web_function
+   ```
 ## Features
 - Searching: user can search recipes based on their favorite ingredients or their diet. This features can help user to easily find the recipes that include the ingrdients on their fridge.
 - Save recipes to favorite page: this can helps users to track their recipes that they want to read again in the future.
