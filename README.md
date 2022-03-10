@@ -1,17 +1,18 @@
-# Healthy Spoon Web Application
+# About the project
 Project's title: HealthySpoon.
 
+This project is built during the time I attend Software Engineering Career Track bootcamp.
+
+Example template:
+
 <img src="https://github.com/thaohvm/Capstone1/blob/master/static/index-image.png?raw=true" width="500">
-<img src="https://github.com/thaohvm/Capstone1/blob/master/static/detail.png?raw=true" width="500">
-<img src="https://github.com/thaohvm/Capstone1/blob/master/static/search-result.png?raw=true" width="500">
 
 ## Built With
 
 This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 
 * [Bootstrap](https://getbootstrap.com)
-* [JQuery](https://jquery.com)
-* [Python](https://jquery.com)
+* [Python](https://www.python.org/)
 * [PostSQL](https://www.postgresql.org/)
 * [SQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/en/2.x/)
 * [Jinja](https://jinja2docs.readthedocs.io/en/stable/)
@@ -22,7 +23,8 @@ This section should list any major frameworks/libraries used to bootstrap your p
 This project is deployed on https://healthy-spoon.herokuapp.com/
 
 ## What the website does/ User flow
-Users can register account and need to fill in their information including username, password, email. They can search for recipes which they prefer by ingredients (such as mushroom, egg,..). After the search, they can find a list of recipes that match their requirements. They can click on any of the recipes to see the details of the recipes. In the detail page, users can see all the ingredients, steps of the recipes. If they like the recipes and want to save it to read in the future, they can click on the button “Save to my Favorite” to add the recipes to their personal page. Additionally, they also can see the recipes that saved by others people who is in the same country.
+Users can register account and need to fill in their information including username, password, email.
+They can search for recipes which they prefer by ingredients (such as mushroom, egg,..). After the search, they can find a list of recipes that match their requirements. They can click on any of the recipes to see the details of the recipes. In the detail page, users can see all the ingredients, steps of the recipes. If they like the recipes and want to save it to read in the future, they can click on the button “Save to my Favorite” to add the recipes to their personal page. Additionally, they also can see the recipes that saved by others people who is in the same country.
 
 ## Getting Started
 ### Installation
