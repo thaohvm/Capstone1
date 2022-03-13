@@ -255,3 +255,13 @@ def add_favorite(recipe_id):
     else:
         return make_response("Bad form input", 400)
     return redirect(f"/recipe/{recipe_id}")
+
+
+##############################################################################
+# 404 page
+
+@app.errorhandler(404)
+def page_not_found(e):
+    """404 NOT FOUND page."""
+
+    return render_template('404.html'), 404
