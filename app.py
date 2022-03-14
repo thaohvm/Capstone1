@@ -1,3 +1,6 @@
+import os
+import requests
+
 from dotenv import load_dotenv
 from flask import (
     Flask,
@@ -13,8 +16,6 @@ from forms import RegisterForm, LoginForm, FavoriteForm
 from models import db, connect_db, User, Recipes, Ingredients
 from sqlalchemy.exc import IntegrityError
 from bs4 import BeautifulSoup
-import os
-import requests
 
 load_dotenv()
 API_BASE_URL = "https://api.spoonacular.com/recipes/"
