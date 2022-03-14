@@ -67,7 +67,8 @@ def get_recipe_from_db_or_404(recipe_id):
                 glutenFree=results["glutenFree"],
                 dairyFree=results["dairyFree"],
             )
-
+            if Recipes.instructions == "null":
+                Recipes.instructions = "No instruction available"
             for i in results["extendedIngredients"]:
                 ingredient = Ingredients.query.get(i["id"])
                 if not ingredient:
