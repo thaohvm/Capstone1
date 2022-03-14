@@ -67,7 +67,7 @@ class Recipes(db.Model):
     summary = db.Column(db.Text, nullable=False)
     image = db.Column(db.Text, nullable=False)
     readyInMinutes = db.Column(db.Integer, nullable=False)
-    instructions = db.Column(db.Text, nullable=False)
+    instructions = db.Column(db.Text, nullable=True)
     vegetarian = db.Column(db.Boolean, default=False, nullable=False)
     vegan = db.Column(db.Boolean, default=False, nullable=False)
     glutenFree = db.Column(db.Boolean, default=False, nullable=False)
